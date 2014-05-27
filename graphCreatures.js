@@ -76,7 +76,7 @@ var makeGraph = function (nodeCount, graphClass, offset) {
       .enter().append("circle")
         .attr("class", "node")
         .attr("class", graphClass)
-        .attr("r", 5)
+        .attr("r", function(){return Math.max(Math.random() * 10, 5)})
         // .attr("")
         .style("fill", function(d) { return color(d.group); })
         .call(force.drag);
@@ -150,36 +150,39 @@ var makeGraph = function (nodeCount, graphClass, offset) {
   //   force.resume();
   //   }
   // });
+var circle = svg.selectAll('circle');
+circle.on("mouseover", function() {
+  var node = d3.select(this);
+  console.log(node.attr("class"));
+  var nodeData = node.data()[0];
+  nodeData.x += (Math.random() - 0.5) * 50;
+  console.log(node, '!!!');
+  console.log(node.data()[0], 'data!');
+  node.data(nodeData);
+  graph.updateNodePositions()
+  force.resume()
+} )
 
 
-  var allnodes = svg.selectAll('circle');
-
-  allnodes.on("mouseover", function() {
-    var selected = d3.select(this);
-    var sdata = selected.data();
-    sdata.x += 300;
-    selected.data(sdata)
-    .attr("cx", function(d) { return d.x; })
-    .attr("cy", function(d) { return d.y; });
-
-    graph.updateNodePositions();
-    force.resume();
-    // debugger;
-  });
-
-  var interval = 100;
-  setInterval(graph.updateNodePositions, interval);
-  console.log(graph.nodes, '!!')
   return graph;
 }
 
 
-var g = makeGraph(5, 'g1', 1);
+var g1 = makeGraph(5, 'g1', 1);
 var g2 = makeGraph(3, 'g2', 200);
-// var g3 = makeGraph(7, 'g2', 1000);
-console.log(g,'!!!!');
+var g3 = makeGraph(7, 'g2', 1000);
+console.log(g1,'!!!!');
 // var nodeCount = 15;
+var graphs =[g1, g2, g3];
+var refresh = function () {
+  for (var i = 0; i < graphs.length; i++) {
+    graphs[i].updateNodePositions()
+  }; 
+}
 
+setInterval(refresh, 100)
+
+// var g = makeGraph(35, 'g1', 50);
 
 // var graph = generateGraphData();
 // console.log(graph);
@@ -219,8 +222,28 @@ console.log(g,'!!!!');
 // d3.timer(makeUpdate(graph), interval);
 
 
+////////
 
+  // var allnodes = svg.selectAll('circle');
 
+  // allnodes.on("mouseover", function() {
+  //   var selected = d3.select(this);
+  //   // var sdata = selected.data();
+  //   // sdata.x += 300;
+  //   selected
+  //   // .data(sdata)
+  //   .attr("cx", function(d) { return d.x + 200; })
+  //   .attr("cy", function(d) { return d.y; });
+
+  //   // graph.updateNodePositions();
+  //   // force.resume();
+  //   // // debugger;
+  // });
+///////
+
+  // var interval = 100;
+  // setInterval(graph.updateNodePositions, interval);
+  // console.log(graph.nodes, '!!')
 
 
   
