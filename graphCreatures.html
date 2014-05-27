@@ -22,7 +22,7 @@ var generateGraphData = function () {
   var graph = { nodes: [], links:[] };
   for (var i = 0; i < 20; i++) {
     var nextRand = Math.floor(Math.random() * 6);
-    console.log(nextRand);
+    // console.log(nextRand);
     graph.nodes.push({group: i % 6});
     graph.links.push({source: i, target: Math.round(i / 3), value: i % 4});
     graph.links.push({source: i, target: Math.round(i / 4), value: i % 4});
@@ -30,9 +30,12 @@ var generateGraphData = function () {
   return graph;
 }
 
-// var updateNodePositions = function () {
-  
-// }
+var updateNodePositions = function (graph) {
+    for (var i = 0; i < graph.nodes.length; i++) {
+      graph.nodes[i].x += (Math.random() - 0.5) * 5;
+      graph.nodes[i].y += (Math.random() - 0.5) * 5;
+    }  
+}
 
 var graph = generateGraphData();
 
@@ -71,6 +74,7 @@ force
 
 
   force.on("tick", function() {
+    updateNodePositions(graph);
     link.attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
